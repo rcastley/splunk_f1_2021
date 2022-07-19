@@ -42,10 +42,14 @@ def write_telemetry_data_to_splunk(driver_name, car_telemetry_data):
             dimensions={'driver': driver_name}
     )
 
-def write_lap_data_to_splunk(driver_name, car_laptime_data):
+def write_lap_data_to_splunk(driver_name, car_laptime_data, sector3time):
     #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     ingest.send(
         gauges=[{
+                'metric': 'f1_2021.currentLapNum',
+                'value': car_laptime_data.currentLapNum,
+                'dimensions': {'driver': driver_name}
+            },{
                 'metric': 'f1_2021.lastLapTime',
                 'value': car_laptime_data.lastLapTime,
                 'dimensions': {'driver': driver_name}
@@ -67,5 +71,10 @@ def write_lap_data_to_splunk(driver_name, car_laptime_data):
                 'metric': 'f1_2021.sector2TimeInMS',
                 'value': car_laptime_data.sector2TimeInMS,
                 'dimensions': {'driver': driver_name}
+            },
+             {
+                 'metric': 'f1_2021.sector3TimeInMS',
+                 'value': sector3time,
+                  'dimensions': {'driver': driver_name}
             }]
     )

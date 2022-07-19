@@ -13,7 +13,8 @@ def start_driver(driver_name):
     udp_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     udp_socket.bind(("", cfg['UDP_PORT']))
     print(f"Listening to Port {cfg['UDP_PORT']}...")
-
+    lastLap = 0  # force a new lap after we pass start finish
+    sector3time = 0    
     # Receive Packages
     while True:
         udp_packet = udp_socket.recv(2048)
@@ -24,8 +25,17 @@ def start_driver(driver_name):
         
         # LAP DATA
         if packet_type == 2:
+            newLap = False
             car_laptime_data = packet.lapData[position]
-            metrics.write_lap_data_to_splunk(driver_name, car_laptime_data)            
+            if car_laptime_data.currentLapNum  > lastLap:
+               newLap = True
+               lastLap = car_laptime_data.currentLapNum
+               sector3time = car_laptime_data.lastLapTime - (car_laptime_data.sector1TimeInMS + car_laptime_data.sector1TimeInMS)
+               print(f"Starting Lap {lastLap}...")
+            elif  car_laptime_data.sector1TimeInMS == 0 and car_laptime_data.sector1TimeInMS == 0:
+                  sector3time = 0
+            metrics.write_lap_data_to_splunk(driver_name, car_laptime_data, sector3time) 
+         
 
         # TELEMETRY DATA
         if packet_type == 6:
