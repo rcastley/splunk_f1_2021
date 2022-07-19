@@ -61,13 +61,15 @@ def write_lap_data_to_splunk(driver_name, car_laptime_data, sector3time):
                 'metric': 'f1_2021.bestLapTime',
                 'value': car_laptime_data.bestLapTime,
                 'dimensions': {'driver': driver_name}
-            }
-            ,{
+            },{
+                'metric': 'f1_2021.bestLapNum',
+                'value': car_laptime_data.bestLapNum,
+                'dimensions': {'driver': driver_name}
+            },{
                 'metric': 'f1_2021.sector1TimeInMS',
                 'value': car_laptime_data.sector1TimeInMS,
                 'dimensions': {'driver': driver_name}
-            }
-            ,{
+            },{
                 'metric': 'f1_2021.sector2TimeInMS',
                 'value': car_laptime_data.sector2TimeInMS,
                 'dimensions': {'driver': driver_name}
@@ -76,5 +78,34 @@ def write_lap_data_to_splunk(driver_name, car_laptime_data, sector3time):
                  'metric': 'f1_2021.sector3TimeInMS',
                  'value': sector3time,
                   'dimensions': {'driver': driver_name}
-            }]
+            },{
+                'metric': 'f1_2021.bestOverallSector1TimeInMS',
+                'value': car_laptime_data.bestOverallSector2TimeInMS,
+                'dimensions': {'driver': driver_name}
+            }
+            ,{
+                'metric': 'f1_2021.bestOverallSector1LapNum',
+                'value': car_laptime_data.bestOverallSector2LapNum,
+                'dimensions': {'driver': driver_name}
+            },
+             {
+                'metric': 'f1_2021.bestOverallSector2TimeInMS',
+                'value': car_laptime_data.bestOverallSector2TimeInMS,
+                'dimensions': {'driver': driver_name}
+            }
+            ,{
+                'metric': 'f1_2021.bestOverallSector2LapNum',
+                'value': car_laptime_data.bestOverallSector2LapNum,
+                'dimensions': {'driver': driver_name}
+            },{
+                'metric': 'f1_2021.bestOverallSector3TimeInMS',
+                'value': car_laptime_data.bestOverallSector2TimeInMS,
+                'dimensions': {'driver': driver_name}
+            }
+            ,{
+                'metric': 'f1_2021.bestOverallSector3LapNum',
+                'value': car_laptime_data.bestOverallSector2LapNum,
+                'dimensions': {'driver': driver_name}
+            }
+            ]
     )
