@@ -1,6 +1,7 @@
 import signalfx
 import logging
 import yaml
+import sys
 
 with open("config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
@@ -38,6 +39,46 @@ def write_telemetry_data_to_splunk(driver_name, car_telemetry_data):
                 "value": car_telemetry_data.brake,
                 "dimensions": {"driver": driver_name},
             },
+            {
+                "metric": "f1_2021.brakeTempFL",
+                "value": car_telemetry_data.brakesTemperature[0],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.brakeTempFR",
+                "value": car_telemetry_data.brakesTemperature[1],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.brakeTempRL",
+                "value": car_telemetry_data.brakesTemperature[2],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.brakeTempRR",
+                "value": car_telemetry_data.brakesTemperature[3],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.tyresSurfaceTempFL",
+                "value": car_telemetry_data.tyresSurfaceTemperature[0],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.tyresSurfaceTempFR",
+                "value": car_telemetry_data.tyresSurfaceTemperature[1],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.tyresSurfaceTempRL",
+                "value": car_telemetry_data.tyresSurfaceTemperature[2],
+                "dimensions": {"driver": driver_name},
+            },
+            {
+                "metric": "f1_2021.tyresSurfaceTempRR",
+                "value": car_telemetry_data.tyresSurfaceTemperature[3],
+                "dimensions": {"driver": driver_name},
+            },
         ]
     )
 
@@ -47,6 +88,19 @@ def write_telemetry_data_to_splunk(driver_name, car_telemetry_data):
             category="USER_DEFINED",
             dimensions={"driver": driver_name},
         )
+
+
+def write_car_status_data_to_splunk(driver_name, car_status_data):
+    # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    ingest.send(
+        gauges=[
+            {
+                "metric": "f1_2021.tyreWearFL",
+                "value": car_status_data.tyresWear[0],
+                "dimensions": {"driver": driver_name},
+            },
+        ]
+    )
 
 
 def write_lap_data_to_splunk(driver_name, car_laptime_data, sector3TimeInS):

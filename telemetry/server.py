@@ -21,7 +21,9 @@ def start_driver(driver_name):
         packet = unpack_udp_packet(udp_packet)
 
         packet_type = packet.header.packetId  # get the packet type from the header
-        position = packet.header.playerCarIndex # get the position of the driver in the list as the packet contains data of all driving cars
+        position = (
+            packet.header.playerCarIndex
+        )  # get the position of the driver in the list as the packet contains data of all driving cars
 
         # LAP DATA
         if packet_type == 2:
@@ -39,9 +41,16 @@ def start_driver(driver_name):
                 and car_laptime_data.sector1TimeInMS == 0
             ):
                 sector3TimeInS = 0
-            metrics.write_lap_data_to_splunk(driver_name, car_laptime_data, sector3TimeInS)
+            metrics.write_lap_data_to_splunk(
+                driver_name, car_laptime_data, sector3TimeInS
+            )
 
         # TELEMETRY DATA
         if packet_type == 6:
             car_telemetry_data = packet.carTelemetryData[position]
             metrics.write_telemetry_data_to_splunk(driver_name, car_telemetry_data)
+
+        # CAR STATUS DATA
+        if packet_type == 7:
+            car_status_data = packet.carStatusData[position]
+            metrics.write_car_status_data_to_splunk(driver_name, car_status_data)
