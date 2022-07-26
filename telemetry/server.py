@@ -2,6 +2,7 @@ import socket
 import yaml
 import telemetry.splunk as metrics
 from f1_2020_telemetry.packets import unpack_udp_packet
+from socket import gethostname, getfqdn, gethostbyname
 
 with open("config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
@@ -11,7 +12,7 @@ def start_driver(driver_name):
     print(f"Driver {driver_name} started ...")
     udp_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     udp_socket.bind(("", cfg["UDP_PORT"]))
-    print(f"Server IP Address: {socket.gethostbyname(socket.gethostname())}")
+    print(f"Server IP Address: {socket.gethostbyname(socket.getfqdn())}")
     print(f"Listening to Port {cfg['UDP_PORT']} on {udp_socket.getsockname()[0]} ...")
     lastLap = 0  # force a new lap after we pass start finish
     sector3TimeInS = 0
