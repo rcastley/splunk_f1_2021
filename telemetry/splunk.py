@@ -50,12 +50,12 @@ tracks = {
 dimensions = {}
 
 def set_dimensions(driver, track_id):
-    track_name = tracks.get(track_id)
     dimensions["driver"] = driver
-    dimensions["track"] = track_name
+    dimensions["track"] = tracks.get(track_id)
 
-def write_telemetry_data_to_splunk(driver_name, car_telemetry_data):
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+def write_telemetry_data(car_telemetry_data):
+    #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     ingest.send(
         gauges=[
             {
@@ -129,38 +129,23 @@ def write_telemetry_data_to_splunk(driver_name, car_telemetry_data):
         )
 
 
-def write_lap_data_to_splunk(driver_name, car_laptime_data, sector3TimeInMS):
+def write_lap_data(m_lap_data):
     # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     ingest.send(
         gauges=[
             {
                 "metric": "f1_2021.currentLapNum",
-                "value": car_laptime_data.m_current_lap_num,
+                "value": m_lap_data.m_current_lap_num,
                 "dimensions": (dimensions),
             },
             {
                 "metric": "f1_2021.lastLapTime",
-                "value": car_laptime_data.m_last_lap_time_in_ms,
+                "value": m_lap_data.m_last_lap_time_in_ms,
                 "dimensions": (dimensions),
             },
             {
                 "metric": "f1_2021.currentLapTime",
-                "value": car_laptime_data.m_current_lap_time_in_ms,
-                "dimensions": (dimensions),
-            },
-            {
-                "metric": "f1_2021.sector1TimeInMS",
-                "value": car_laptime_data.m_sector1_time_in_ms,
-                "dimensions": (dimensions),
-            },
-            {
-                "metric": "f1_2021.sector2TimeInMS",
-                "value": car_laptime_data.m_sector2_time_in_ms,
-                "dimensions": (dimensions),
-            },
-            {
-                "metric": "f1_2021.sector3TimeInMS",
-                "value": sector3TimeInMS,
+                "value": m_lap_data.m_current_lap_time_in_ms,
                 "dimensions": (dimensions),
             },
         ]
