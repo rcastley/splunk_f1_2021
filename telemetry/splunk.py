@@ -53,6 +53,22 @@ def set_dimensions(driver, track_id):
     dimensions["driver"] = driver
     dimensions["track"] = tracks.get(track_id)
 
+def write_temperatures(track_temperature, m_air_temperature):
+    # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    ingest.send(
+        gauges=[
+            {
+                "metric": "f1_2021.trackTemp",
+                "value": track_temperature,
+                "dimensions": (dimensions),
+            },
+            {
+                "metric": "f1_2021.airTemp",
+                "value": m_air_temperature,
+                "dimensions": (dimensions),
+            },
+        ]
+    )
 
 def write_telemetry_data(car_telemetry_data):
     #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
