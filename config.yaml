@@ -1,3 +1,6 @@
-ACCESS_TOKEN: xxx
-REALM: eu0
+SPLUNK_ACCESS_TOKEN: xxx
+SPLUNK_REALM: eu0
 UDP_PORT: 20777
+SPLUNK_HEC_ENDPOINT: http://localhost:8088/services/collector
+SPLUNK_HEC_TOKEN: xxx
+
