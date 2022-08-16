@@ -19,12 +19,13 @@ def start_driver(driver_name):
     while True:
         packet = listener.get()
         packet_type = packet.m_header.m_packet_id  # get the packet type from the header
-        position = (packet.m_header.m_player_car_index)  # get the position of the driver
+        position = packet.m_header.m_player_car_index  # get the position of the driver
+        session_uid = packet.m_header.m_session_uid  # get the session uid
 
         # SESSION DATA
         if packet_type == 1:
-            if packet.m_track_id is not None:
-                metrics.set_dimensions(driver_name, packet.m_track_id)
+            if position is not None:
+                metrics.set_dimensions(session_uid, driver_name, packet.m_track_id)
             metrics.write_temperatures(packet.m_track_temperature, packet.m_air_temperature)
 
         # LAP DATA
