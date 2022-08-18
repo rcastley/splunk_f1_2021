@@ -1,6 +1,10 @@
+# USE_SPLUNK_O11Y - Send telemetry data to o11y cloud  True/False
+USE_SPLUNK_O11Y: True 
 SPLUNK_ACCESS_TOKEN: xxx
 SPLUNK_REALM: eu0
 UDP_PORT: 20777
+# USE_SPUNK_HEC - Send telemetry data via Splunk Hec  True/False
+USE_SPUNK_HEC: False  
 SPLUNK_HEC_ENDPOINT: http://localhost:8088/services/collector
 SPLUNK_HEC_TOKEN: xxx
 

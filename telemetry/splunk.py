@@ -21,6 +21,7 @@ ingest = sfx.ingest(cfg["SPLUNK_ACCESS_TOKEN"])
 url = cfg["SPLUNK_HEC_ENDPOINT"]
 headers = {"Authorization": "Splunk " + cfg["SPLUNK_HEC_TOKEN"]}
 
+
 tracks = {
     0: "Melbourne",
     1: "Paul Ricard",
@@ -81,7 +82,8 @@ def write_temperatures(track_temperature, air_temperature):
     temps = threading.Thread(target=write_splunk_hec, name="splunk_temperature", args=(splunk_temperature_json,))
     temps.start()
 
-    ingest.send(gauges=temperature_json)
+    if cfg["USE_SPLUNK_O11Y"] == True:
+        ingest.send(gauges=temperature_json)
 
 
 def write_telemetry_data(car_telemetry_data):
@@ -160,14 +162,15 @@ def write_telemetry_data(car_telemetry_data):
     #for thread in threading.enumerate(): 
     #    print(thread.name)
 
-    ingest.send(gauges=telemetry_json)
+    if cfg["USE_SPLUNK_O11Y"]== True:
+        ingest.send(gauges=telemetry_json)
 
-    if car_telemetry_data.m_drs == 1:
-        ingest.send_event(
-            event_type="m_drs_enabled",
-            category="USER_DEFINED",
-            dimensions=dimensions,
-        )
+        if car_telemetry_data.m_drs == 1:
+            ingest.send_event(
+                event_type="m_drs_enabled",
+                category="USER_DEFINED",
+                dimensions=dimensions,
+            )
 
 
 def write_lap_data(m_lap_data):
@@ -190,18 +193,19 @@ def write_lap_data(m_lap_data):
         },
     ]
 
-    # write_splunk_hec(lap_data_json)
-
-    ingest.send(gauges=lap_data_json)
+    write_splunk_hec(lap_data_json)
+    if cfg["USE_SPLUNK_O11Y"]== True:
+        ingest.send(gauges=lap_data_json)
 
 
 def write_splunk_hec(json_data):
-    event = {}
-    event["time"] = int(time.time())
-    event["event"] = "metric"
-    event["sourcetype"] = "f1_2021_telemetry"
-    event["host"] = "xbox"
-    event["source"] = "metrics"
-    event["fields"] = json_data
-    payload = json.dumps(event, separators=(',', ':'))
-    resp = requests.post(url, data=payload, headers=headers)
+    if cfg["USE_SPUNK_HEC"] == True: 
+        event = {}
+        event["time"] = int(time.time())
+        event["event"] = "metric"
+        event["sourcetype"] = "f1_2021_telemetry"
+        event["host"] = "xbox"
+        event["source"] = "metrics"
+        event["fields"] = json_data
+        payload = json.dumps(event, separators=(',', ':'))
+        resp = requests.post(url, data=payload, headers=headers)
