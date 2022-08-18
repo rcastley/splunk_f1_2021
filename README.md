@@ -9,7 +9,7 @@ pip install -r requirements.txt
 python3 main.py
 ```
 
-if you get an error socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+if you get an error socket.gaierror: [Errno 8] No nodename or servername provided, or not known
 
 add the following to your /etc/hosts file wher [YOURHOSTNAME] is the host name of your machine
 0.0.0.0     [YOURHOSTNAME]
