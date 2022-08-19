@@ -14,13 +14,16 @@ def start_driver(driver_name):
     print(
         f"UDP Server listening to port {cfg['UDP_PORT']} on IP address: {socket.gethostbyname(socket.getfqdn())}"
     )
-
+    showGameInfo = True
     # Receive Packages
     while True:
         packet = listener.get()
+        if showGameInfo== True:
+            print(f"Game version: {packet.m_header.m_game_major_version}.{packet.m_header.m_game_minor_version} Packet format: {packet.m_header.m_packet_format}") 
+            showGameInfo = False
         packet_type = packet.m_header.m_packet_id  # get the packet type from the header
         position = packet.m_header.m_player_car_index  # get the position of the driver
-        session_uid = packet.m_header.m_session_uid  # get the session uid
+        session_uid = packet.m_header.m_session_uid  # get the session uid  
 
         # SESSION DATA
         if packet_type == 1:
@@ -31,7 +34,7 @@ def start_driver(driver_name):
         # LAP DATA
         if packet_type == 2:
             metrics.write_lap_data(packet.m_lap_data[position])
-
+ 
         # TELEMETRY DATA
         if packet_type == 6:
             metrics.write_telemetry_data(packet.m_car_telemetry_data[position])

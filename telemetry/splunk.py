@@ -153,6 +153,25 @@ def write_telemetry_data(car_telemetry_data):
             "metric": "f1_2021.tyresSurfaceTempRR",
             "value": car_telemetry_data.m_tyres_surface_temperature[3],
             "dimensions": dimensions,
+        },        {
+            "metric": "f1_2021.tyresInnerTempFL",
+            "value": car_telemetry_data.m_tyres_inner_temperature[0],
+            "dimensions": dimensions,
+        },
+        {
+            "metric": "f1_2021.tyresInnerTempFR",
+            "value": car_telemetry_data.m_tyres_inner_temperature[1],
+            "dimensions": dimensions,
+        },
+        {
+            "metric": "f1_2021.tyresInnerTempRL",
+            "value": car_telemetry_data.m_tyres_inner_temperature[2],
+            "dimensions": dimensions,
+        },
+        {
+            "metric": "f1_2021.tyresInnerTempRR",
+            "value": car_telemetry_data.m_tyres_inner_temperature[3],
+            "dimensions": dimensions,
         },
     ]
 
