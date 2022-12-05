@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 from pyaccsharedmemory import accSharedMemory  # type: ignore
 import time
+import sys
 import requests  # type: ignore
-from requests.adapters import HTTPAdapter, Retry  # type: ignore
+from requests.adapters import HTTPAdapter  # type: ignore
 import json
 import configparser
 import signalfx  # type: ignore
 import urllib3  # type: ignore
 import background  # type: ignore
 import enum
-from rich import print  # type: ignore
 from rich.panel import Panel  # type: ignore
 from rich.layout import Layout  # type: ignore
 from rich.live import Live  # type: ignore
@@ -108,12 +108,18 @@ def send_metrics(data, sourcetype):
 
 @background.task
 def send_hec(data, sourcetype):
-    event = {}
-    event["host"] = hostname
-    event["sourcetype"] = sourcetype
-    event["source"] = "acc"
-    event["time"] = int(time.time_ns() / 1000)
-    event["event"] = data
+    #event = {}
+    #event["host"] = hostname
+    #event["sourcetype"] = sourcetype
+    #event["source"] = "acc"
+    #event["time"] = int(time.time_ns() / 1000)
+    #event["event"] = data
+
+    event = {'host': hostname,
+             'sourcetype': sourcetype,
+             'source': 'acc',
+             'time': int(time.time_ns() / 1000),
+             'event': data}
 
     url = splunk_hec_ip + ":" + splunk_hec_port + "/services/collector"
     header = {"Authorization": "Splunk " + splunk_hec_token}
@@ -122,8 +128,6 @@ def send_hec(data, sourcetype):
         response = sesh.post(url=url, data=json.dumps(event), headers=header, verify=False)
         response.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        #print(err)
-        #print("Packet ID affected: " + sourcetype)
         layout["top_right"].update(Layout(Panel("\n[i bright_red]Awaiting Player data ...[/i bright_red]", title="[b cyan]Telemetry", title_align="left")))
 
 
@@ -239,18 +243,18 @@ if __name__ == "__main__":
                 sm = asm.read_shared_memory()
                 if not (isinstance(sm, type(None))):
 
-                    if static == True:
+                    if static is True:
                         process_data(sm.Static, "ACC_Static")
 
-                    if graphics == True:
+                    if graphics is True:
                         process_data(sm.Graphics, "ACC_Graphics")
 
-                    if physics == True:
+                    if physics is True:
                         process_data(sm.Physics, "ACC_Physics")
                     
                     time.sleep(0.1)
                 else:
                     asm.close()
-                    exit("No ACC metrics detected!")
+                    sys.exit("No ACC metrics detected!")
         except KeyboardInterrupt:
             asm.close()
